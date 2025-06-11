@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation"
-import { getPost } from "@/lib/post"
+import { getOwnPost } from "@/lib/ownPost"
 import {
   Card,
   CardContent,
@@ -9,6 +9,7 @@ import {
 import Image from "next/image"
 import { ja } from "date-fns/locale"
 import { format } from "date-fns"
+import { auth } from '@/auth'
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import rehypeHighlight from "rehype-highlight";
@@ -18,9 +19,15 @@ type Params = {
   params: Promise<{id: string}>
 }
 
-export default async function page({params}: Params) {
+export default async function ShowPage({params}: Params) {
+  const session = await auth()
+  const userId = session?.user?.id;
+  if (!session?.user?.email || !userId) {
+    throw new Error("不正なリクエストです");
+  }
+
   const {id} = await params
-  const post = await getPost(id)
+  const post = await getOwnPost(userId, id)
 
   if(!post) {
     notFound()

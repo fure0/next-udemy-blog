@@ -119,4 +119,16 @@
   body {
     @apply bg-background text-foreground;
   }
+
+  /* Markdown 테이블 테두리 강제 적용 */
+  .prose table {
+    border-collapse: collapse;
+    width: 100%;
+  }
+
+  .prose th,
+  .prose td {
+    border: 1px solid var(--border);
+    padding: 0.5rem;
+  }
 }
